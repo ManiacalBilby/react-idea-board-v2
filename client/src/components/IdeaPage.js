@@ -1,15 +1,14 @@
 import React, {Component} from 'react'
 import styled from 'styled-components'
-import IdeaPage from './components/IdeaPage'
 
-class App extends Component {
+class IdeaPage extends Component {
     render() {
         return(
             <div>
-                <IdeaPage/>
+                <h1>Idea Page</h1>
             </div>
         )
     }
 }
 
-export default App
+export default IdeaPage
