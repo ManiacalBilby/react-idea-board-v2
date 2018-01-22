@@ -2,12 +2,22 @@ const express = require('express')
 const Idea = require('../db/models/Idea')
 const router = express.Router()
 
-router.get('/', (req, res) => {
-    Idea.find({})
-    .then(ideas => {
+router.get('/', async (req, res) => {
+    try { 
+        const ideas = await Idea.find({})
         res.json(ideas)
-    })
-    .catch((err) => console.log(err))
+    } catch(error) {
+        console.log(error)
+}
+})
+
+router.post('/', async (req, res) => {
+    try {
+        const newIdea = await Idea.create({})
+        res.json(newIdea)
+    } catch (error) {
+        console.log(error)
+    }
 })
 
 module.exports = router

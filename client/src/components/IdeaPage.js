@@ -38,29 +38,33 @@ const TitleInput = styled.input`
 class IdeaPage extends Component {
 
     state = {
-        ideas: [
-            {
-                id: 1,
-                title: 'hello',
-                description: 'world'
-            },
-            {
-                id: 2,
-                title: 'hola',
-                description: 'mundo'
-            },
-            {
-                id: 3,
-                title: 'goodnight',
-                description: 'moon'
-            },
-            {
-                id: 4,
-                title: 'greetings',
-                description: 'earthlings'
-            }
-        ]
+        ideas: []
     }
+
+async componentWillMount() {
+    const response = await axios.get('/api/ideas')
+    this.setState({ideas: response.data})
+}
+
+createIdea = async () => {
+    const response = await axios.post('/api/ideas')
+    const newIdea = response.data
+
+    const newIdeas = [...this.state.ideas]
+    newIdeas.unshift(newIdea)
+    this.setState({ideas: newIdeas})
+}
+
+handleChange = (idea, event) => {
+    const updatedIdeas = [...this.state.ideas]
+    const ideaToUpdate = updatedIdeas.find((newIdea) => {
+        return newIdea._id === idea._id
+    })
+
+    ideaToUpdate[event.target.name] = event.target.value
+    this.setState({ideas: updatedIdeas})
+}
+
     render() {
         return (
             <div>
@@ -68,17 +72,17 @@ class IdeaPage extends Component {
                     <HeaderDiv>
                     <h1>Idea Board</h1>
                     </HeaderDiv>
-                    <button>New Idea</button>
+                    <button onClick={this.createIdea}>New Idea</button>
                 </div>
                 <IdeasDiv>
                     {this.state.ideas.map((idea) => {
                         return(
-                            <IdeaDiv key={idea.title}>
+                            <IdeaDiv key={idea._id}>
                             <div>
-                                <TitleInput type="text" name="Title"/>
+                                <TitleInput onChange={(event) => {this.handleChange(idea, event)}} type="text" name="title" value={idea.title}/>
                                 </div>
                                 <div>
-                                <DescriptionTextArea name="description"></DescriptionTextArea>
+                                <DescriptionTextArea onChange={(event) => {this.handleChange(idea, event)}} name="description" value={idea.description}></DescriptionTextArea>
                                 </div>
                                 <div>
                                 <button>Delete Idea</button>
